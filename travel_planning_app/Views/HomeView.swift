@@ -13,6 +13,10 @@ struct HomeView: View {
         Trip(destination: "Tokyo",
              startDate: Date(),
              endDate: Calendar.current.date(byAdding: .day, value: 3, to: Date())!,
+             members: [
+                Member(name: "John"),
+                Member(name: "Jane")
+             ],
              budget: 2000.00,
              status: .current
         )

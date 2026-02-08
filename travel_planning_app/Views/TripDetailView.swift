@@ -32,7 +32,12 @@ struct TripDetailView: View {
             Text("Itinerary")
                 .font(.headline)
             
-            Text("No itinerary items yet.")
+            Text("Next: (placeholder)")
+                .foregroundStyle(.secondary)
+            
+            NavigationLink("View Itinerary") {
+                ItineraryView(trip: trip)
+            }
             
             Divider()
             

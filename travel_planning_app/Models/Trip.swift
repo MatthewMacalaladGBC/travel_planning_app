@@ -12,6 +12,7 @@ struct Trip: Identifiable, Hashable {
     let destination: String
     let startDate: Date
     let endDate: Date
+    let members: [Member]
     let budget: Double
     let status: Status
     
