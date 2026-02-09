@@ -10,6 +10,7 @@ import SwiftUI
 struct AddTripView: View {
     @Environment(\.dismiss) private var dismiss
     
+// State variables to store user input
     @State private var destination = ""
     @State private var startDate = Date()
     @State private var endDate = Date()
@@ -19,9 +20,9 @@ struct AddTripView: View {
         NavigationStack {
             Form {
                 
-                
+                //Text filed for entering the trip destination
                 TextField("Destination", text: $destination)
-                
+                //Date picker for selecting the start date of the trip
                 DatePicker("Start Date", selection: $startDate, displayedComponents: .date)
                 DatePicker("End Date", selection: $endDate, displayedComponents: .date)
                 
@@ -36,7 +37,7 @@ struct AddTripView: View {
                         dismiss()
                     }
                 }
-                
+                //Cancel Button
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
                         dismiss()
