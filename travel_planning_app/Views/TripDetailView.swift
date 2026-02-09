@@ -60,3 +60,15 @@ struct TripDetailView: View {
         .navigationTitle("Trip Details")
     }
 }
+extension TripDetailView {
+    
+    /// Returns a formatted date range for display
+    var formattedDateRange: String {
+        "\(trip.startDate.formatted(date: .abbreviated, time: .omitted)) - \(trip.endDate.formatted(date: .abbreviated, time: .omitted))"
+    }
+    
+    /// Returns the formatted budget string
+    var formattedBudget: String {
+        "$\(trip.budget, specifier: "%.2f")"
+    }
+}
