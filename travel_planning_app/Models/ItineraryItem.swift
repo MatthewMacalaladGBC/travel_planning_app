@@ -16,3 +16,15 @@ struct ItineraryItem: Identifiable, Hashable {
     var members: [Member]
     var notes: String
 }
+extension ItineraryItem {
+    
+    // Returns true if this itinerary item has any notes
+    var hasNotes: Bool {
+        !notes.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+    
+    // Returns a display-friendly member list
+    var memberDisplayText: String {
+        members.isEmpty ? "None" : members.map { $0.name }.joined(separator: ", ")
+    }
+}
