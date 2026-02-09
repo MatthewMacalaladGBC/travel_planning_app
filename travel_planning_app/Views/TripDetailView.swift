@@ -2,8 +2,6 @@
 //  TripDetailView.swift
 //  travel_planning_app
 //
-//  Created by Matthew Macalalad on 2026-02-08.
-//
 
 import SwiftUI
 
@@ -60,15 +58,14 @@ struct TripDetailView: View {
         .navigationTitle("Trip Details")
     }
 }
+
 extension TripDetailView {
     
-    /// Returns a formatted date range for display
     var formattedDateRange: String {
         "\(trip.startDate.formatted(date: .abbreviated, time: .omitted)) - \(trip.endDate.formatted(date: .abbreviated, time: .omitted))"
     }
     
-    /// Returns the formatted budget string
     var formattedBudget: String {
-        "$\(trip.budget, specifier: "%.2f")"
+        String(format: "$%.2f", trip.budget)
     }
 }
