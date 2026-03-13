@@ -12,7 +12,7 @@ struct travel_planning_appApp: App {
     var body: some Scene {
         WindowGroup {
             NavigationStack {
-                HomeView()
+                LaunchView()
             }
         }
     }

@@ -8,94 +8,53 @@
 import SwiftUI
 
 struct ItineraryView: View {
-    let trip: Trip
-    @State private var selectedDay: Date = Date()
-    @State private var showingDaySheet = false
-    
-    // Hard-coded items for UI prototype
-    private var sampleItems: [ItineraryItem] {
-        let days = tripDays
-        guard let day1 = days.first else { return [] }
-        
-        let members = trip.members.isEmpty
-        ? [ Member(name: "John"), Member(name: "Jane")]
-        : trip.members
-        
-        let items: [ItineraryItem] = [
-            ItineraryItem(
-                date: day1,
-                title: "Check-in / Hotel",
-                timeText: "1:00 PM",
-                members: members,
-                notes: "Confirm booking and drop off bags"
-            ),
-            ItineraryItem(
-                date: day1,
-                title: "Dinner Reservations",
-                timeText: "6:30 PM",
-                members: members,
-                notes: "Meet up in hotel lobby by 5:45 PM"
-            ),
-            ItineraryItem(
-                date: days[1],
-                title: "Activity 1",
-                timeText: "2:00 PM",
-                members: members,
-                notes: "Don't forget tickets and bring a change of clothes"
-            )
-        ]
-        return items
-    }
-    
-    private var tripDays: [Date] {
-        TripDateHelper.daysInclusive(from: trip.startDate, to: trip.endDate)
-    }
-        
-    private func items(for day: Date) -> [ItineraryItem] {
-        let key = Calendar.current.startOfDay(for: day)
-        return sampleItems.filter { Calendar.current.isDate($0.date, inSameDayAs: key)}
+    @Binding var trip: Trip
+    @State private var showingAddActivity = false
+
+    private var sortedItems: [ItineraryItem] {
+        trip.itineraryItems.sorted { $0.date < $1.date }
     }
 
     var body: some View {
-        List {
-            ForEach(tripDays, id: \.self) { day in
-                Section {
-                    let dayItems = items(for: day)
-                    if dayItems.isEmpty {
-                        Text("No items planned for this day.")
-                            .foregroundStyle(.secondary)
-                    } else {
-                        ForEach(dayItems) { item in
+        VStack {
+            if sortedItems.isEmpty {
+                Spacer()
+                Text("No itinerary items yet.")
+                    .foregroundColor(.gray)
+                Spacer()
+            } else {
+                List {
+                    ForEach(sortedItems) { item in
+                        VStack(alignment: .leading, spacing: 6) {
                             Text(item.title)
-                        }
-                    }
-                } header: {
-                    Button {
-                        selectedDay = day
-                        showingDaySheet = true
-                    } label: {
-                        HStack {
-                            Text(day, format: .dateTime.weekday(.wide).month().day())
                                 .font(.headline)
-                            Spacer()
-                            Image(systemName: "chevron.right")
-                                .foregroundStyle(.secondary)
+
+                            Text("\(formattedDate(item.date)) • \(item.timeText)")
+                                .foregroundColor(.secondary)
+
+                            if !item.notes.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                                Text(item.notes)
+                                    .font(.subheadline)
+                            }
                         }
-                        .padding(.vertical, 6)
-                        .contentShape(Rectangle())
+                        .padding(.vertical, 4)
                     }
-                    .buttonStyle(.plain)
                 }
             }
+
+            Button("+ Add Activity") {
+                showingAddActivity = true
+            }
+            .buttonStyle(.borderedProminent)
+            .padding()
         }
         .navigationTitle("Itinerary")
-        .navigationBarTitleDisplayMode(.inline)
-        .sheet(isPresented: $showingDaySheet) {
-            DayItineraryView (
-                trip: trip,
-                day: selectedDay,
-                dayItems: items(for: selectedDay)
-            )
+        .sheet(isPresented: $showingAddActivity) {
+            AddItineraryItemView(trip: $trip)
         }
+    }
+
+    private func formattedDate(_ date: Date) -> String {
+        date.formatted(date: .abbreviated, time: .omitted)
     }
 }
