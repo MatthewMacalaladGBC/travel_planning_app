@@ -8,7 +8,57 @@
 import SwiftUI
 
 struct HomeView: View {
-    @State private var trips: [Trip] = []
+    @State private var trips: [Trip] = [
+        Trip(
+            destination: "Montreal",
+            startDate: Calendar.current.date(from: DateComponents(year: 2025, month: 8, day: 10)) ?? Date(),
+            endDate: Calendar.current.date(from: DateComponents(year: 2025, month: 8, day: 15)) ?? Date(),
+            members: [
+                Member(name: "Sara"),
+                Member(name: "Matthew"),
+                Member(name: "Karen")
+            ],
+            budget: 1500,
+            status: .past,
+            itineraryItems: [
+                ItineraryItem(
+                    date: Calendar.current.date(from: DateComponents(year: 2025, month: 8, day: 11)) ?? Date(),
+                    title: "Old Montreal Tour",
+                    timeText: "10:00 AM",
+                    members: [
+                        Member(name: "Sara"),
+                        Member(name: "Matthew"),
+                        Member(name: "Karen")
+                    ],
+                    notes: "Walk around and take pictures"
+                ),
+                ItineraryItem(
+                    date: Calendar.current.date(from: DateComponents(year: 2025, month: 8, day: 12)) ?? Date(),
+                    title: "Dinner Downtown",
+                    timeText: "7:00 PM",
+                    members: [
+                        Member(name: "Sara"),
+                        Member(name: "Matthew")
+                    ],
+                    notes: "Try a popular restaurant"
+                )
+            ],
+            expenses: [
+                Expense(
+                    title: "Hotel",
+                    amount: 600,
+                    paidBy: "Sara",
+                    sharedWith: ["Sara", "Matthew", "Karen"]
+                ),
+                Expense(
+                    title: "Dinner",
+                    amount: 150,
+                    paidBy: "Matthew",
+                    sharedWith: ["Sara", "Matthew"]
+                )
+            ]
+        )
+    ]
     @State private var showAddTrip = false
 
     var currentTripIndices: [Int] {

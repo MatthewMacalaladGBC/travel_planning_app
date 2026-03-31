@@ -17,28 +17,33 @@ struct ItineraryView: View {
 
     var body: some View {
         VStack {
-            if sortedItems.isEmpty {
+            if trip.itineraryItems.isEmpty {
                 Spacer()
                 Text("No itinerary items yet.")
                     .foregroundColor(.gray)
                 Spacer()
             } else {
                 List {
-                    ForEach(sortedItems) { item in
-                        VStack(alignment: .leading, spacing: 6) {
-                            Text(item.title)
-                                .font(.headline)
+                    ForEach($trip.itineraryItems) { $item in
+                        NavigationLink {
+                            EditItineraryItemView(item: $item)
+                        } label: {
+                            VStack(alignment: .leading, spacing: 6) {
+                                Text(item.title)
+                                    .font(.headline)
 
-                            Text("\(formattedDate(item.date)) • \(item.timeText)")
-                                .foregroundColor(.secondary)
+                                Text("\(formattedDate(item.date)) • \(item.timeText)")
+                                    .foregroundColor(.secondary)
 
-                            if !item.notes.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                                Text(item.notes)
-                                    .font(.subheadline)
+                                if !item.notes.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                                    Text(item.notes)
+                                        .font(.subheadline)
+                                }
                             }
+                            .padding(.vertical, 4)
                         }
-                        .padding(.vertical, 4)
                     }
+                    .onDelete(perform: deleteItem)
                 }
             }
 
@@ -52,6 +57,10 @@ struct ItineraryView: View {
         .sheet(isPresented: $showingAddActivity) {
             AddItineraryItemView(trip: $trip)
         }
+    }
+
+    private func deleteItem(at offsets: IndexSet) {
+        trip.itineraryItems.remove(atOffsets: offsets)
     }
 
     private func formattedDate(_ date: Date) -> String {

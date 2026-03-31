@@ -1,51 +1,47 @@
 //
-//  AddItineraryItemView.swift
+//  EditItineraryView.swift
 //  travel_planning_app
 //
-//  Created by Matthew Macalalad on 2026-02-08.
+//  Created by Sara Yohannes on 2026-03-31.
 //
 
 import SwiftUI
 
-struct AddItineraryItemView: View {
+struct EditItineraryItemView: View {
     @Environment(\.dismiss) private var dismiss
-    @Binding var trip: Trip
+    @Binding var item: ItineraryItem
 
     @State private var title: String
     @State private var selectedDate: Date
     @State private var timeText: String
     @State private var notes: String
 
-    init(trip: Binding<Trip>) {
-        self._trip = trip
-        self._title = State(initialValue: "")
-        self._selectedDate = State(initialValue: trip.wrappedValue.startDate)
-        self._timeText = State(initialValue: "")
-        self._notes = State(initialValue: "")
+    init(item: Binding<ItineraryItem>) {
+        self._item = item
+        self._title = State(initialValue: item.wrappedValue.title)
+        self._selectedDate = State(initialValue: item.wrappedValue.date)
+        self._timeText = State(initialValue: item.wrappedValue.timeText)
+        self._notes = State(initialValue: item.wrappedValue.notes)
     }
 
     var body: some View {
         NavigationStack {
             Form {
-                Section("Activity Info") {
+                Section("Edit Activity") {
                     TextField("Title", text: $title)
 
-                    DatePicker(
-                        "Date",
-                        selection: $selectedDate,
-                        in: trip.startDate...trip.endDate,
-                        displayedComponents: .date
-                    )
+                    DatePicker("Date", selection: $selectedDate, displayedComponents: .date)
 
                     TextField("Time", text: $timeText)
+
                     TextField("Notes", text: $notes)
                 }
             }
-            .navigationTitle("Add Activity")
+            .navigationTitle("Edit Activity")
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
-                        saveActivity()
+                        saveChanges()
                     }
                     .disabled(title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                 }
@@ -59,19 +55,15 @@ struct AddItineraryItemView: View {
         }
     }
 
-    private func saveActivity() {
+    private func saveChanges() {
         let cleanedTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !cleanedTitle.isEmpty else { return }
 
-        let newItem = ItineraryItem(
-            date: selectedDate,
-            title: cleanedTitle,
-            timeText: timeText.isEmpty ? "Time not set" : timeText,
-            members: trip.members,
-            notes: notes
-        )
+        item.title = cleanedTitle
+        item.date = selectedDate
+        item.timeText = timeText.isEmpty ? "Time not set" : timeText
+        item.notes = notes
 
-        trip.itineraryItems.append(newItem)
         dismiss()
     }
 }

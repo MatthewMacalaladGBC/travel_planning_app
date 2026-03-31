@@ -49,6 +49,9 @@ struct TripDetailView: View {
                 NavigationLink("View Itinerary") {
                     ItineraryView(trip: $trip)
                 }
+                NavigationLink("View Budget / Expenses"){
+                    BudgetView(trip: $trip)
+                }
 
                 Divider()
 

@@ -16,6 +16,7 @@ struct Trip: Identifiable, Hashable {
     var budget: Double
     var status: Status
     var itineraryItems: [ItineraryItem]
+    var expenses: [Expense]
 
     init(
         id: UUID = UUID(),
@@ -25,7 +26,8 @@ struct Trip: Identifiable, Hashable {
         members: [Member],
         budget: Double,
         status: Status,
-        itineraryItems: [ItineraryItem] = []
+        itineraryItems: [ItineraryItem] = [],
+        expenses: [Expense] = []
     ) {
         self.id = id
         self.destination = destination
@@ -35,6 +37,7 @@ struct Trip: Identifiable, Hashable {
         self.budget = budget
         self.status = status
         self.itineraryItems = itineraryItems
+        self.expenses = expenses
     }
 
     enum Status: Hashable {

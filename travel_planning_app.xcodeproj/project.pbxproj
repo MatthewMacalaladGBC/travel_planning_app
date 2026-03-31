@@ -22,6 +22,11 @@
 		186C70F52F64965400605250 /* TripDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 186C70F42F64965400605250 /* TripDetailView.swift */; };
 		186C70FB2F64A3D600605250 /* AddItineraryItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 186C70FA2F64A3D600605250 /* AddItineraryItemView.swift */; };
 		186C70FD2F64A5C700605250 /* EditTripView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 186C70FC2F64A5C700605250 /* EditTripView.swift */; };
+		18BF18652F7C57E1009B7F7B /* Expense.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18BF18642F7C57E1009B7F7B /* Expense.swift */; };
+		18BF18692F7C5918009B7F7B /* AddExpenseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18BF18682F7C5918009B7F7B /* AddExpenseView.swift */; };
+		18BF186B2F7C5AAA009B7F7B /* EditExpenseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18BF186A2F7C5AAA009B7F7B /* EditExpenseView.swift */; };
+		18BF186D2F7C5BAB009B7F7B /* EditItineraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18BF186C2F7C5BAB009B7F7B /* EditItineraryView.swift */; };
+		18BF186F2F7C6A19009B7F7B /* BudgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18BF186E2F7C6A19009B7F7B /* BudgetView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,6 +46,11 @@
 		186C70F42F64965400605250 /* TripDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TripDetailView.swift; sourceTree = "<group>"; };
 		186C70FA2F64A3D600605250 /* AddItineraryItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddItineraryItemView.swift; sourceTree = "<group>"; };
 		186C70FC2F64A5C700605250 /* EditTripView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTripView.swift; sourceTree = "<group>"; };
+		18BF18642F7C57E1009B7F7B /* Expense.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Expense.swift; sourceTree = "<group>"; };
+		18BF18682F7C5918009B7F7B /* AddExpenseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddExpenseView.swift; sourceTree = "<group>"; };
+		18BF186A2F7C5AAA009B7F7B /* EditExpenseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditExpenseView.swift; sourceTree = "<group>"; };
+		18BF186C2F7C5BAB009B7F7B /* EditItineraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditItineraryView.swift; sourceTree = "<group>"; };
+		18BF186E2F7C6A19009B7F7B /* BudgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,6 +107,7 @@
 				186C70E82F64962200605250 /* TripDateHelper.swift */,
 				186C70E62F64961D00605250 /* Trip.swift */,
 				186C70E42F64961200605250 /* Member.swift */,
+				18BF18642F7C57E1009B7F7B /* Expense.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -112,6 +123,10 @@
 				186C70FA2F64A3D600605250 /* AddItineraryItemView.swift */,
 				186C70FC2F64A5C700605250 /* EditTripView.swift */,
 				1824D2542F64BD9000A06B6E /* LaunchView.swift */,
+				18BF18682F7C5918009B7F7B /* AddExpenseView.swift */,
+				18BF186A2F7C5AAA009B7F7B /* EditExpenseView.swift */,
+				18BF186C2F7C5BAB009B7F7B /* EditItineraryView.swift */,
+				18BF186E2F7C6A19009B7F7B /* BudgetView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -186,16 +201,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				18BF18652F7C57E1009B7F7B /* Expense.swift in Sources */,
 				1824D2512F64B8F400A06B6E /* travel_planning_appApp.swift in Sources */,
+				18BF186D2F7C5BAB009B7F7B /* EditItineraryView.swift in Sources */,
 				186C70F52F64965400605250 /* TripDetailView.swift in Sources */,
 				186C70FD2F64A5C700605250 /* EditTripView.swift in Sources */,
 				1824D2552F64BD9000A06B6E /* LaunchView.swift in Sources */,
 				186C70F12F64964D00605250 /* HomeView.swift in Sources */,
+				18BF186B2F7C5AAA009B7F7B /* EditExpenseView.swift in Sources */,
 				186C70EB2F64962A00605250 /* ItineraryItem.swift in Sources */,
 				186C70EF2F64964800605250 /* DayItineraryView.swift in Sources */,
 				186C70E72F64961D00605250 /* Trip.swift in Sources */,
 				186C70ED2F64964400605250 /* AddTripView.swift in Sources */,
 				186C70E52F64961200605250 /* Member.swift in Sources */,
+				18BF186F2F7C6A19009B7F7B /* BudgetView.swift in Sources */,
+				18BF18692F7C5918009B7F7B /* AddExpenseView.swift in Sources */,
 				186C70FB2F64A3D600605250 /* AddItineraryItemView.swift in Sources */,
 				186C70E92F64962200605250 /* TripDateHelper.swift in Sources */,
 				186C70F32F64965000605250 /* ItineraryView.swift in Sources */,

@@ -98,7 +98,8 @@ struct AddTripView: View {
             members: members,
             budget: budgetValue,
             status: tripStatus,
-            itineraryItems: []
+            itineraryItems: [],
+            expenses: []
         )
 
         trips.append(newTrip)
