@@ -9,8 +9,7 @@ import SwiftUI
 
 struct AddTripView: View {
     @Environment(\.dismiss) private var dismiss
-
-    @Binding var trips: [Trip]
+    @EnvironmentObject var store: TripStore
 
     @State private var destination = ""
     @State private var startDate = Date()
@@ -102,13 +101,15 @@ struct AddTripView: View {
             expenses: []
         )
 
-        trips.append(newTrip)
+        store.trips.append(newTrip)
+        store.save()
         dismiss()
     }
 }
 
 struct AddTripView_Previews: PreviewProvider {
     static var previews: some View {
-        AddTripView(trips: .constant([]))
+        AddTripView()
+            .environmentObject(TripStore(context: PersistenceController.preview.container.viewContext))
     }
 }

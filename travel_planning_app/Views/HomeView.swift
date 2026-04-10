@@ -8,69 +8,19 @@
 import SwiftUI
 
 struct HomeView: View {
-    @State private var trips: [Trip] = [
-        Trip(
-            destination: "Montreal",
-            startDate: Calendar.current.date(from: DateComponents(year: 2025, month: 8, day: 10)) ?? Date(),
-            endDate: Calendar.current.date(from: DateComponents(year: 2025, month: 8, day: 15)) ?? Date(),
-            members: [
-                Member(name: "Sara"),
-                Member(name: "Matthew"),
-                Member(name: "Karen")
-            ],
-            budget: 1500,
-            status: .past,
-            itineraryItems: [
-                ItineraryItem(
-                    date: Calendar.current.date(from: DateComponents(year: 2025, month: 8, day: 11)) ?? Date(),
-                    title: "Old Montreal Tour",
-                    timeText: "10:00 AM",
-                    members: [
-                        Member(name: "Sara"),
-                        Member(name: "Matthew"),
-                        Member(name: "Karen")
-                    ],
-                    notes: "Walk around and take pictures"
-                ),
-                ItineraryItem(
-                    date: Calendar.current.date(from: DateComponents(year: 2025, month: 8, day: 12)) ?? Date(),
-                    title: "Dinner Downtown",
-                    timeText: "7:00 PM",
-                    members: [
-                        Member(name: "Sara"),
-                        Member(name: "Matthew")
-                    ],
-                    notes: "Try a popular restaurant"
-                )
-            ],
-            expenses: [
-                Expense(
-                    title: "Hotel",
-                    amount: 600,
-                    paidBy: "Sara",
-                    sharedWith: ["Sara", "Matthew", "Karen"]
-                ),
-                Expense(
-                    title: "Dinner",
-                    amount: 150,
-                    paidBy: "Matthew",
-                    sharedWith: ["Sara", "Matthew"]
-                )
-            ]
-        )
-    ]
+    @EnvironmentObject var store: TripStore
     @State private var showAddTrip = false
 
     var currentTripIndices: [Int] {
-        trips.indices.filter { trips[$0].status == .current }
+        store.trips.indices.filter { store.trips[$0].status == .current }
     }
 
     var upcomingTripIndices: [Int] {
-        trips.indices.filter { trips[$0].status == .upcoming }
+        store.trips.indices.filter { store.trips[$0].status == .upcoming }
     }
 
     var pastTripIndices: [Int] {
-        trips.indices.filter { trips[$0].status == .past }
+        store.trips.indices.filter { store.trips[$0].status == .past }
     }
 
     var body: some View {
@@ -91,20 +41,23 @@ struct HomeView: View {
                             .foregroundColor(.gray)
                     } else {
                         ForEach(currentTripIndices, id: \.self) { index in
-                            let tripId = trips[index].id
+                            let tripId = store.trips[index].id
 
                             NavigationLink {
                                 TripDetailView(
-                                    trip: $trips[index],
+                                    trip: Binding(
+                                        get: { store.trips[index] },
+                                        set: { store.trips[index] = $0 }
+                                    ),
                                     onDelete: {
-                                        trips.removeAll { $0.id == tripId }
+                                        store.trips.removeAll { $0.id == tripId }
                                     }
                                 )
                             } label: {
                                 VStack(alignment: .leading, spacing: 2) {
-                                    Text(trips[index].destination)
+                                    Text(store.trips[index].destination)
                                         .fontWeight(.bold)
-                                    Text(formattedDateRange(for: trips[index]))
+                                    Text(formattedDateRange(for: store.trips[index]))
                                 }
                             }
                         }
@@ -121,20 +74,23 @@ struct HomeView: View {
                             .foregroundColor(.gray)
                     } else {
                         ForEach(upcomingTripIndices, id: \.self) { index in
-                            let tripId = trips[index].id
+                            let tripId = store.trips[index].id
 
                             NavigationLink {
                                 TripDetailView(
-                                    trip: $trips[index],
+                                    trip: Binding(
+                                        get: { store.trips[index] },
+                                        set: { store.trips[index] = $0 }
+                                    ),
                                     onDelete: {
-                                        trips.removeAll { $0.id == tripId }
+                                        store.trips.removeAll { $0.id == tripId }
                                     }
                                 )
                             } label: {
                                 VStack(alignment: .leading, spacing: 2) {
-                                    Text(trips[index].destination)
+                                    Text(store.trips[index].destination)
                                         .fontWeight(.bold)
-                                    Text(formattedDateRange(for: trips[index]))
+                                    Text(formattedDateRange(for: store.trips[index]))
                                 }
                             }
                         }
@@ -151,20 +107,23 @@ struct HomeView: View {
                             .foregroundColor(.gray)
                     } else {
                         ForEach(pastTripIndices, id: \.self) { index in
-                            let tripId = trips[index].id
+                            let tripId = store.trips[index].id
 
                             NavigationLink {
                                 TripDetailView(
-                                    trip: $trips[index],
+                                    trip: Binding(
+                                        get: { store.trips[index] },
+                                        set: { store.trips[index] = $0 }
+                                    ),
                                     onDelete: {
-                                        trips.removeAll { $0.id == tripId }
+                                        store.trips.removeAll { $0.id == tripId }
                                     }
                                 )
                             } label: {
                                 VStack(alignment: .leading, spacing: 2) {
-                                    Text(trips[index].destination)
+                                    Text(store.trips[index].destination)
                                         .fontWeight(.bold)
-                                    Text(formattedDateRange(for: trips[index]))
+                                    Text(formattedDateRange(for: store.trips[index]))
                                 }
                             }
                         }
@@ -179,7 +138,11 @@ struct HomeView: View {
             .padding()
         }
         .sheet(isPresented: $showAddTrip) {
-            AddTripView(trips: $trips)
+            AddTripView()
+        }
+        // Auto-save whenever any trip data changes through a binding
+        .onChange(of: store.trips) { _ in
+            store.save()
         }
     }
 
@@ -193,5 +156,6 @@ struct HomeView_Previews: PreviewProvider {
         NavigationStack {
             HomeView()
         }
+        .environmentObject(TripStore(context: PersistenceController.preview.container.viewContext))
     }
 }

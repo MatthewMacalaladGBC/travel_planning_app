@@ -27,6 +27,10 @@
 		18BF186B2F7C5AAA009B7F7B /* EditExpenseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18BF186A2F7C5AAA009B7F7B /* EditExpenseView.swift */; };
 		18BF186D2F7C5BAB009B7F7B /* EditItineraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18BF186C2F7C5BAB009B7F7B /* EditItineraryView.swift */; };
 		18BF186F2F7C6A19009B7F7B /* BudgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18BF186E2F7C6A19009B7F7B /* BudgetView.swift */; };
+		CD0001AA0001BB0001CC0001 /* TravelPlanner.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = CD0001AA0001BB0001CC0002 /* TravelPlanner.xcdatamodeld */; };
+		CD0002AA0002BB0002CC0001 /* PersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0002AA0002BB0002CC0002 /* PersistenceController.swift */; };
+		CD0003AA0003BB0003CC0001 /* TripStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0003AA0003BB0003CC0002 /* TripStore.swift */; };
+		CD0004AA0004BB0004CC0001 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD0004AA0004BB0004CC0002 /* CoreData.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -51,6 +55,10 @@
 		18BF186A2F7C5AAA009B7F7B /* EditExpenseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditExpenseView.swift; sourceTree = "<group>"; };
 		18BF186C2F7C5BAB009B7F7B /* EditItineraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditItineraryView.swift; sourceTree = "<group>"; };
 		18BF186E2F7C6A19009B7F7B /* BudgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetView.swift; sourceTree = "<group>"; };
+		CD0001AA0001BB0001CC0002 /* TravelPlanner.xcdatamodeld */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodeld; path = TravelPlanner.xcdatamodeld; sourceTree = "<group>"; };
+		CD0002AA0002BB0002CC0002 /* PersistenceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceController.swift; sourceTree = "<group>"; };
+		CD0003AA0003BB0003CC0002 /* TripStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripStore.swift; sourceTree = "<group>"; };
+		CD0004AA0004BB0004CC0002 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +66,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CD0004AA0004BB0004CC0001 /* CoreData.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -69,6 +78,7 @@
 			children = (
 				186C70D22F64949300605250 /* travel_planning_app */,
 				186C70D12F64949300605250 /* Products */,
+				CD0004AA0004BB0004CC0002 /* CoreData.framework */,
 			);
 			sourceTree = "<group>";
 		};
@@ -108,6 +118,9 @@
 				186C70E62F64961D00605250 /* Trip.swift */,
 				186C70E42F64961200605250 /* Member.swift */,
 				18BF18642F7C57E1009B7F7B /* Expense.swift */,
+				CD0001AA0001BB0001CC0002 /* TravelPlanner.xcdatamodeld */,
+				CD0002AA0002BB0002CC0002 /* PersistenceController.swift */,
+				CD0003AA0003BB0003CC0002 /* TripStore.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -219,6 +232,9 @@
 				186C70FB2F64A3D600605250 /* AddItineraryItemView.swift in Sources */,
 				186C70E92F64962200605250 /* TripDateHelper.swift in Sources */,
 				186C70F32F64965000605250 /* ItineraryView.swift in Sources */,
+				CD0001AA0001BB0001CC0001 /* TravelPlanner.xcdatamodeld in Sources */,
+				CD0002AA0002BB0002CC0001 /* PersistenceController.swift in Sources */,
+				CD0003AA0003BB0003CC0001 /* TripStore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

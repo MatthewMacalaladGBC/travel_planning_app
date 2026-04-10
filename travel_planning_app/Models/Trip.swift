@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Trip: Identifiable, Hashable {
+struct Trip: Identifiable, Hashable, Codable {
     let id: UUID
     var destination: String
     var startDate: Date
@@ -40,7 +40,7 @@ struct Trip: Identifiable, Hashable {
         self.expenses = expenses
     }
 
-    enum Status: Hashable {
+    enum Status: String, Codable, Hashable {
         case current
         case upcoming
         case past
