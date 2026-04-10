@@ -26,18 +26,32 @@ struct ItineraryView: View {
                 List {
                     ForEach($trip.itineraryItems) { $item in
                         NavigationLink {
-                            EditItineraryItemView(item: $item)
+                            ItineraryItemDetailView(item: $item)
                         } label: {
                             VStack(alignment: .leading, spacing: 6) {
                                 Text(item.title)
                                     .font(.headline)
 
-                                Text("\(formattedDate(item.date)) • \(item.timeText)")
-                                    .foregroundColor(.secondary)
+                                HStack(spacing: 4) {
+                                    Text("\(formattedDate(item.date)) • \(item.timeText)")
+                                        .foregroundColor(.secondary)
+                                    if let location = item.location, !location.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                                        Text("• \(location)")
+                                            .foregroundColor(.secondary)
+                                    }
+                                }
+                                .font(.subheadline)
 
-                                if !item.notes.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                                if let cost = item.cost {
+                                    Text(String(format: "$%.2f", cost))
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+
+                                if item.hasNotes {
                                     Text(item.notes)
                                         .font(.subheadline)
+                                        .lineLimit(1)
                                 }
                             }
                             .padding(.vertical, 4)

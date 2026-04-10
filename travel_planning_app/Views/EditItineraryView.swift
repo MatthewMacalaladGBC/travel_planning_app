@@ -15,41 +15,54 @@ struct EditItineraryItemView: View {
     @State private var selectedDate: Date
     @State private var timeText: String
     @State private var notes: String
+    @State private var location: String
+    @State private var cost: String
 
     init(item: Binding<ItineraryItem>) {
         self._item = item
-        self._title = State(initialValue: item.wrappedValue.title)
-        self._selectedDate = State(initialValue: item.wrappedValue.date)
-        self._timeText = State(initialValue: item.wrappedValue.timeText)
-        self._notes = State(initialValue: item.wrappedValue.notes)
+        let i = item.wrappedValue
+        self._title = State(initialValue: i.title)
+        self._selectedDate = State(initialValue: i.date)
+        self._timeText = State(initialValue: i.timeText)
+        self._notes = State(initialValue: i.notes)
+        self._location = State(initialValue: i.location ?? "")
+        self._cost = State(initialValue: i.cost.map { String($0) } ?? "")
     }
 
     var body: some View {
-        NavigationStack {
-            Form {
-                Section("Edit Activity") {
-                    TextField("Title", text: $title)
+        Form {
+            Section("Edit Activity") {
+                TextField("Title", text: $title)
 
-                    DatePicker("Date", selection: $selectedDate, displayedComponents: .date)
+                DatePicker("Date", selection: $selectedDate, displayedComponents: .date)
 
-                    TextField("Time", text: $timeText)
-
-                    TextField("Notes", text: $notes)
-                }
+                TextField("Time (e.g. 10:00 AM)", text: $timeText)
             }
-            .navigationTitle("Edit Activity")
-            .toolbar {
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Save") {
-                        saveChanges()
-                    }
-                    .disabled(title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-                }
 
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
-                        dismiss()
-                    }
+            Section("Optional Details") {
+                TextField("Location", text: $location)
+
+                TextField("Cost", text: $cost)
+                    .keyboardType(.decimalPad)
+            }
+
+            Section("Notes") {
+                TextField("Notes", text: $notes, axis: .vertical)
+                    .lineLimit(3...6)
+            }
+        }
+        .navigationTitle("Edit Activity")
+        .toolbar {
+            ToolbarItem(placement: .confirmationAction) {
+                Button("Save") {
+                    saveChanges()
+                }
+                .disabled(title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+            }
+
+            ToolbarItem(placement: .cancellationAction) {
+                Button("Cancel") {
+                    dismiss()
                 }
             }
         }
@@ -59,10 +72,13 @@ struct EditItineraryItemView: View {
         let cleanedTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !cleanedTitle.isEmpty else { return }
 
+        let cleanedLocation = location.trimmingCharacters(in: .whitespacesAndNewlines)
         item.title = cleanedTitle
         item.date = selectedDate
-        item.timeText = timeText.isEmpty ? "Time not set" : timeText
+        item.timeText = timeText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "Time not set" : timeText
         item.notes = notes
+        item.location = cleanedLocation.isEmpty ? nil : cleanedLocation
+        item.cost = Double(cost)
 
         dismiss()
     }

@@ -14,14 +14,43 @@ struct ItineraryItem: Identifiable, Hashable, Codable {
     var timeText: String
     var members: [Member]
     var notes: String
+    var location: String?
+    var cost: Double?
 
-    init(id: UUID = UUID(), date: Date, title: String, timeText: String, members: [Member], notes: String) {
+    init(
+        id: UUID = UUID(),
+        date: Date,
+        title: String,
+        timeText: String,
+        members: [Member],
+        notes: String,
+        location: String? = nil,
+        cost: Double? = nil
+    ) {
         self.id = id
         self.date = date
         self.title = title
         self.timeText = timeText
         self.members = members
         self.notes = notes
+        self.location = location
+        self.cost = cost
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case id, date, title, timeText, members, notes, location, cost
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(UUID.self, forKey: .id)
+        date = try container.decode(Date.self, forKey: .date)
+        title = try container.decode(String.self, forKey: .title)
+        timeText = try container.decode(String.self, forKey: .timeText)
+        members = try container.decode([Member].self, forKey: .members)
+        notes = try container.decode(String.self, forKey: .notes)
+        location = try container.decodeIfPresent(String.self, forKey: .location)
+        cost = try container.decodeIfPresent(Double.self, forKey: .cost)
     }
 }
 

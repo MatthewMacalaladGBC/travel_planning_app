@@ -17,6 +17,7 @@ struct Trip: Identifiable, Hashable, Codable {
     var status: Status
     var itineraryItems: [ItineraryItem]
     var expenses: [Expense]
+    var paidSettlementKeys: Set<String>  // "debtor | creditor" keys for paid settlements
 
     init(
         id: UUID = UUID(),
@@ -27,7 +28,8 @@ struct Trip: Identifiable, Hashable, Codable {
         budget: Double,
         status: Status,
         itineraryItems: [ItineraryItem] = [],
-        expenses: [Expense] = []
+        expenses: [Expense] = [],
+        paidSettlementKeys: Set<String> = []
     ) {
         self.id = id
         self.destination = destination
@@ -38,12 +40,32 @@ struct Trip: Identifiable, Hashable, Codable {
         self.status = status
         self.itineraryItems = itineraryItems
         self.expenses = expenses
+        self.paidSettlementKeys = paidSettlementKeys
     }
 
     enum Status: String, Codable, Hashable {
         case current
         case upcoming
         case past
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case id, destination, startDate, endDate, members, budget, status
+        case itineraryItems, expenses, paidSettlementKeys
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(UUID.self, forKey: .id)
+        destination = try container.decode(String.self, forKey: .destination)
+        startDate = try container.decode(Date.self, forKey: .startDate)
+        endDate = try container.decode(Date.self, forKey: .endDate)
+        members = try container.decode([Member].self, forKey: .members)
+        budget = try container.decode(Double.self, forKey: .budget)
+        status = try container.decode(Status.self, forKey: .status)
+        itineraryItems = try container.decodeIfPresent([ItineraryItem].self, forKey: .itineraryItems) ?? []
+        expenses = try container.decodeIfPresent([Expense].self, forKey: .expenses) ?? []
+        paidSettlementKeys = try container.decodeIfPresent(Set<String>.self, forKey: .paidSettlementKeys) ?? []
     }
 
     static func calculateStatus(startDate: Date, endDate: Date) -> Status {

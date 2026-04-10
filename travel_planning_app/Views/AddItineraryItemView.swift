@@ -15,6 +15,8 @@ struct AddItineraryItemView: View {
     @State private var selectedDate: Date
     @State private var timeText: String
     @State private var notes: String
+    @State private var location: String
+    @State private var cost: String
 
     init(trip: Binding<Trip>) {
         self._trip = trip
@@ -22,6 +24,8 @@ struct AddItineraryItemView: View {
         self._selectedDate = State(initialValue: trip.wrappedValue.startDate)
         self._timeText = State(initialValue: "")
         self._notes = State(initialValue: "")
+        self._location = State(initialValue: "")
+        self._cost = State(initialValue: "")
     }
 
     var body: some View {
@@ -37,8 +41,19 @@ struct AddItineraryItemView: View {
                         displayedComponents: .date
                     )
 
-                    TextField("Time", text: $timeText)
-                    TextField("Notes", text: $notes)
+                    TextField("Time (e.g. 10:00 AM)", text: $timeText)
+                }
+
+                Section("Optional Details") {
+                    TextField("Location", text: $location)
+
+                    TextField("Cost", text: $cost)
+                        .keyboardType(.decimalPad)
+                }
+
+                Section("Notes") {
+                    TextField("Notes", text: $notes, axis: .vertical)
+                        .lineLimit(3...6)
                 }
             }
             .navigationTitle("Add Activity")
@@ -63,12 +78,15 @@ struct AddItineraryItemView: View {
         let cleanedTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !cleanedTitle.isEmpty else { return }
 
+        let cleanedLocation = location.trimmingCharacters(in: .whitespacesAndNewlines)
         let newItem = ItineraryItem(
             date: selectedDate,
             title: cleanedTitle,
-            timeText: timeText.isEmpty ? "Time not set" : timeText,
+            timeText: timeText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "Time not set" : timeText,
             members: trip.members,
-            notes: notes
+            notes: notes,
+            location: cleanedLocation.isEmpty ? nil : cleanedLocation,
+            cost: Double(cost)
         )
 
         trip.itineraryItems.append(newItem)
