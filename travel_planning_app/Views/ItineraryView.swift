@@ -11,8 +11,9 @@ struct ItineraryView: View {
     @Binding var trip: Trip
     @State private var showingAddActivity = false
 
-    private var sortedItems: [ItineraryItem] {
-        trip.itineraryItems.sorted { $0.date < $1.date }
+    /// Indices of itineraryItems sorted by date ascending.
+    private var sortedIndices: [Int] {
+        trip.itineraryItems.indices.sorted { trip.itineraryItems[$0].date < trip.itineraryItems[$1].date }
     }
 
     var body: some View {
@@ -24,20 +25,35 @@ struct ItineraryView: View {
                 Spacer()
             } else {
                 List {
-                    ForEach($trip.itineraryItems) { $item in
+                    ForEach(sortedIndices, id: \.self) { index in
                         NavigationLink {
-                            EditItineraryItemView(item: $item)
+                            ItineraryItemDetailView(item: $trip.itineraryItems[index])
                         } label: {
+                            let item = trip.itineraryItems[index]
                             VStack(alignment: .leading, spacing: 6) {
                                 Text(item.title)
                                     .font(.headline)
 
-                                Text("\(formattedDate(item.date)) • \(item.timeText)")
-                                    .foregroundColor(.secondary)
+                                HStack(spacing: 4) {
+                                    Text(item.date.formatted(date: .abbreviated, time: .shortened))
+                                        .foregroundColor(.secondary)
+                                    if let location = item.location, !location.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                                        Text("• \(location)")
+                                            .foregroundColor(.secondary)
+                                    }
+                                }
+                                .font(.subheadline)
 
-                                if !item.notes.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                                if let cost = item.cost {
+                                    Text(String(format: "$%.2f", cost))
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+
+                                if item.hasNotes {
                                     Text(item.notes)
                                         .font(.subheadline)
+                                        .lineLimit(1)
                                 }
                             }
                             .padding(.vertical, 4)
@@ -60,10 +76,8 @@ struct ItineraryView: View {
     }
 
     private func deleteItem(at offsets: IndexSet) {
-        trip.itineraryItems.remove(atOffsets: offsets)
+        let realIndices = IndexSet(offsets.map { sortedIndices[$0] })
+        trip.itineraryItems.remove(atOffsets: realIndices)
     }
 
-    private func formattedDate(_ date: Date) -> String {
-        date.formatted(date: .abbreviated, time: .omitted)
-    }
 }

@@ -26,7 +26,7 @@ struct DayItineraryView: View {
                             Text(item.title)
                                 .font(.headline)
                             
-                            Text("Time: \(item.timeText)")
+                            Text("Time: \(item.date.formatted(date: .omitted, time: .shortened))")
                                 .font(.subheadline)
                                 .foregroundStyle(.secondary)
                             

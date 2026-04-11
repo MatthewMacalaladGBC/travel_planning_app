@@ -9,11 +9,19 @@ import SwiftUI
 
 @main
 struct travel_planning_appApp: App {
+    @StateObject private var tripStore: TripStore
+
+    init() {
+        let context = PersistenceController.shared.container.viewContext
+        _tripStore = StateObject(wrappedValue: TripStore(context: context))
+    }
+
     var body: some Scene {
         WindowGroup {
             NavigationStack {
                 LaunchView()
             }
+            .environmentObject(tripStore)
         }
     }
 }

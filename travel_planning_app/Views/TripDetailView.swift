@@ -12,6 +12,26 @@ struct TripDetailView: View {
     @Binding var trip: Trip
     let onDelete: () -> Void
     @State private var showingEditTrip = false
+    @State private var showingIdentityPicker = false
+    @State private var currentIdentity: String? = nil  // member name, outsider sentinel, or nil (not set)
+
+    private var isOutsider: Bool {
+        currentIdentity == TripIdentity.outsider
+    }
+
+    private var totalSpent: Double {
+        trip.expenses.reduce(0) { $0 + $1.amount }
+    }
+
+    private var recentExpense: Expense? {
+        trip.expenses.sorted { $0.date > $1.date }.first
+    }
+
+    private var nextItineraryItem: ItineraryItem? {
+        let now = Date()
+        let sorted = trip.itineraryItems.sorted { $0.date < $1.date }
+        return sorted.first { $0.date >= now } ?? sorted.last
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -26,31 +46,47 @@ struct TripDetailView: View {
 
                 Divider()
 
-                Text("Budget Preview")
-                    .font(.headline)
+                if !isOutsider {
+                    Text("Budget")
+                        .font(.headline)
 
-                Text("Expected budget per person: \(formattedBudget)")
+                    HStack {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("Budget per person: \(formattedBudget)")
+                            Text("Total spent: \(String(format: "$%.2f", totalSpent))")
+                                .foregroundColor(totalSpent > trip.budget * Double(max(trip.members.count, 1)) ? .red : .secondary)
+                            if let recent = recentExpense {
+                                Text("Last expense: \(recent.title) (\(String(format: "$%.2f", recent.amount)))")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                    }
 
-                Divider()
+                    Divider()
+                }
             }
 
             Group {
                 Text("Itinerary")
                     .font(.headline)
 
-                if let nextItem = trip.itineraryItems.sorted(by: { $0.date < $1.date }).first {
-                    Text("Next: \(nextItem.title) - \(nextItem.timeText)")
+                if let next = nextItineraryItem {
+                    Text("Next: \(next.title) — \(next.date.formatted(date: .abbreviated, time: .shortened))")
                         .foregroundColor(.secondary)
                 } else {
-                    Text("Next: (placeholder)")
+                    Text("No itinerary items yet")
                         .foregroundColor(.secondary)
                 }
 
                 NavigationLink("View Itinerary") {
                     ItineraryView(trip: $trip)
                 }
-                NavigationLink("View Budget / Expenses"){
-                    BudgetView(trip: $trip)
+
+                if !isOutsider {
+                    NavigationLink("View Budget / Expenses") {
+                        BudgetView(trip: $trip)
+                    }
                 }
 
                 Divider()
@@ -72,18 +108,59 @@ struct TripDetailView: View {
 
             Spacer()
 
-            Button("Edit Trip") {
-                showingEditTrip = true
+            identityRow
+
+            if !isOutsider {
+                Button("Edit Trip") {
+                    showingEditTrip = true
+                }
+                .buttonStyle(.borderedProminent)
             }
-            .buttonStyle(.borderedProminent)
         }
         .padding()
         .navigationTitle("Trip Details")
+        .onAppear {
+            currentIdentity = TripIdentity.get(for: trip.id)
+            if currentIdentity == nil {
+                showingIdentityPicker = true
+            }
+        }
+        .sheet(isPresented: $showingIdentityPicker) {
+            TripIdentityPickerView(trip: trip) { chosen in
+                TripIdentity.set(chosen, for: trip.id)
+                currentIdentity = chosen
+            }
+        }
         .sheet(isPresented: $showingEditTrip) {
             EditTripView(trip: $trip, onDelete: {
                 onDelete()
                 dismiss()
             })
+        }
+    }
+
+    private var identityRow: some View {
+        HStack {
+            if let identity = currentIdentity {
+                if identity == TripIdentity.outsider {
+                    Text("Viewing as: Outsider")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                } else {
+                    Text("Viewing as: \(identity)")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
+            } else {
+                Text("Identity not set")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+            }
+            Spacer()
+            Button("Change") {
+                showingIdentityPicker = true
+            }
+            .font(.subheadline)
         }
     }
 }
