@@ -15,7 +15,7 @@ struct ItineraryItemDetailView: View {
             Section("Activity") {
                 LabeledContent("Title", value: item.title)
                 LabeledContent("Date", value: item.date.formatted(date: .long, time: .omitted))
-                LabeledContent("Time", value: item.timeText)
+                LabeledContent("Time", value: item.date.formatted(date: .omitted, time: .shortened))
 
                 if let location = item.location, !location.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                     LabeledContent("Location", value: location)

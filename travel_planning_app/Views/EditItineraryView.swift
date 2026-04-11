@@ -13,7 +13,6 @@ struct EditItineraryItemView: View {
 
     @State private var title: String
     @State private var selectedDate: Date
-    @State private var timeText: String
     @State private var notes: String
     @State private var location: String
     @State private var cost: String
@@ -23,7 +22,6 @@ struct EditItineraryItemView: View {
         let i = item.wrappedValue
         self._title = State(initialValue: i.title)
         self._selectedDate = State(initialValue: i.date)
-        self._timeText = State(initialValue: i.timeText)
         self._notes = State(initialValue: i.notes)
         self._location = State(initialValue: i.location ?? "")
         self._cost = State(initialValue: i.cost.map { String($0) } ?? "")
@@ -34,9 +32,7 @@ struct EditItineraryItemView: View {
             Section("Edit Activity") {
                 TextField("Title", text: $title)
 
-                DatePicker("Date", selection: $selectedDate, displayedComponents: .date)
-
-                TextField("Time (e.g. 10:00 AM)", text: $timeText)
+                DatePicker("Date & Time", selection: $selectedDate, displayedComponents: [.date, .hourAndMinute])
             }
 
             Section("Optional Details") {
@@ -75,7 +71,6 @@ struct EditItineraryItemView: View {
         let cleanedLocation = location.trimmingCharacters(in: .whitespacesAndNewlines)
         item.title = cleanedTitle
         item.date = selectedDate
-        item.timeText = timeText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "Time not set" : timeText
         item.notes = notes
         item.location = cleanedLocation.isEmpty ? nil : cleanedLocation
         item.cost = Double(cost)

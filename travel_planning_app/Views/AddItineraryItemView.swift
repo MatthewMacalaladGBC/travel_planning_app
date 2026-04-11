@@ -13,7 +13,6 @@ struct AddItineraryItemView: View {
 
     @State private var title: String
     @State private var selectedDate: Date
-    @State private var timeText: String
     @State private var notes: String
     @State private var location: String
     @State private var cost: String
@@ -22,7 +21,6 @@ struct AddItineraryItemView: View {
         self._trip = trip
         self._title = State(initialValue: "")
         self._selectedDate = State(initialValue: trip.wrappedValue.startDate)
-        self._timeText = State(initialValue: "")
         self._notes = State(initialValue: "")
         self._location = State(initialValue: "")
         self._cost = State(initialValue: "")
@@ -35,13 +33,11 @@ struct AddItineraryItemView: View {
                     TextField("Title", text: $title)
 
                     DatePicker(
-                        "Date",
+                        "Date & Time",
                         selection: $selectedDate,
                         in: trip.startDate...trip.endDate,
-                        displayedComponents: .date
+                        displayedComponents: [.date, .hourAndMinute]
                     )
-
-                    TextField("Time (e.g. 10:00 AM)", text: $timeText)
                 }
 
                 Section("Optional Details") {
@@ -82,7 +78,6 @@ struct AddItineraryItemView: View {
         let newItem = ItineraryItem(
             date: selectedDate,
             title: cleanedTitle,
-            timeText: timeText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "Time not set" : timeText,
             members: trip.members,
             notes: notes,
             location: cleanedLocation.isEmpty ? nil : cleanedLocation,

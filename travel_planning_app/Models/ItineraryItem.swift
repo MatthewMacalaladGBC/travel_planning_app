@@ -9,9 +9,8 @@ import Foundation
 
 struct ItineraryItem: Identifiable, Hashable, Codable {
     let id: UUID
-    var date: Date
+    var date: Date      // stores full date + time
     var title: String
-    var timeText: String
     var members: [Member]
     var notes: String
     var location: String?
@@ -21,7 +20,6 @@ struct ItineraryItem: Identifiable, Hashable, Codable {
         id: UUID = UUID(),
         date: Date,
         title: String,
-        timeText: String,
         members: [Member],
         notes: String,
         location: String? = nil,
@@ -30,7 +28,6 @@ struct ItineraryItem: Identifiable, Hashable, Codable {
         self.id = id
         self.date = date
         self.title = title
-        self.timeText = timeText
         self.members = members
         self.notes = notes
         self.location = location
@@ -38,7 +35,8 @@ struct ItineraryItem: Identifiable, Hashable, Codable {
     }
 
     enum CodingKeys: String, CodingKey {
-        case id, date, title, timeText, members, notes, location, cost
+        case id, date, title, members, notes, location, cost
+        // timeText is intentionally omitted — legacy field, ignored on decode
     }
 
     init(from decoder: Decoder) throws {
@@ -46,7 +44,6 @@ struct ItineraryItem: Identifiable, Hashable, Codable {
         id = try container.decode(UUID.self, forKey: .id)
         date = try container.decode(Date.self, forKey: .date)
         title = try container.decode(String.self, forKey: .title)
-        timeText = try container.decode(String.self, forKey: .timeText)
         members = try container.decode([Member].self, forKey: .members)
         notes = try container.decode(String.self, forKey: .notes)
         location = try container.decodeIfPresent(String.self, forKey: .location)
@@ -56,12 +53,10 @@ struct ItineraryItem: Identifiable, Hashable, Codable {
 
 extension ItineraryItem {
 
-    // Returns true if this itinerary item has any notes
     var hasNotes: Bool {
         !notes.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 
-    // Returns a display-friendly member list
     var memberDisplayText: String {
         members.isEmpty ? "None" : members.map { $0.name }.joined(separator: ", ")
     }

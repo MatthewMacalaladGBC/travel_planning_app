@@ -28,11 +28,9 @@ struct TripDetailView: View {
     }
 
     private var nextItineraryItem: ItineraryItem? {
-        let today = Calendar.current.startOfDay(for: Date())
-        return trip.itineraryItems
-            .sorted { $0.date < $1.date }
-            .first { Calendar.current.startOfDay(for: $0.date) >= today }
-            ?? trip.itineraryItems.sorted { $0.date < $1.date }.first
+        let now = Date()
+        let sorted = trip.itineraryItems.sorted { $0.date < $1.date }
+        return sorted.first { $0.date >= now } ?? sorted.last
     }
 
     var body: some View {
@@ -74,7 +72,7 @@ struct TripDetailView: View {
                     .font(.headline)
 
                 if let next = nextItineraryItem {
-                    Text("Next: \(next.title) — \(next.timeText)")
+                    Text("Next: \(next.title) — \(next.date.formatted(date: .abbreviated, time: .shortened))")
                         .foregroundColor(.secondary)
                 } else {
                     Text("No itinerary items yet")
